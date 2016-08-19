@@ -54,11 +54,12 @@ def login (username):
             # Click on the OK button to get to the Go! page
             driver.find_element_by_id('ButtonOK').click()
             result = 1
-        elif 'Login failed. Please check your user name and password' in divText:
+        elif 'Please check your user name and password' in divText:
             print 'Username or password incorrect'
             result = 2        
-            
-            
+        elif 'Maximum number of users are logged in.' in divText:
+            print 'Maximum number of users exceded'
+            result = 3
             
     return (driver, result)
 
