@@ -7,52 +7,58 @@ from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 from selenium.webdriver.common.action_chains import ActionChains
 
-def login (username):
-    # Create a new instance of the Chrome driver
-    # Use incognito mode so that multiple users can be set up
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--incognito")
-    driver = webdriver.Chrome(chrome_options=chrome_options)
-
-    # Maximise browser window
-    driver.maximize_window()
-
-    # Go to the Go! login page
-    driver.get("http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=/go/")
-
-    user = str(username)
-    
-    print 'User %s attempting to log in' % user
+class user:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+        self.admin = False
+        self.loggedin = False
+        # Create a new instance of the Chrome driver
+        # Use incognito mode so that multiple users can be set up
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--incognito")
+        self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        # Maximise browser window
+        self.driver.maximize_window()
+        # Go to the Go! login page
+        self.driver.get("http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=/go/")
+        
+    def setAdmin(user, isAdmin):
+        user.admin = isAdmin
+        
+def login (user):
+    # Logs in the user
+    print 'Login: %s' % user.username
     time.sleep( 2 )
     # Enter username into UserName dialog
-    username = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "UserName")))
-    username.send_keys(user)
+    username = WebDriverWait(user.driver, 10).until(EC.presence_of_element_located((By.NAME, "UserName")))
+    username.send_keys(user.username)
 
     # Enter password into Password dialog (assume password is quantel@)
-    password = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Password")))
-    password.send_keys('quantel@')
+    password = WebDriverWait(user.driver, 10).until(EC.presence_of_element_located((By.NAME, "Password")))
+    password.send_keys(user.password)
 
     # Select and click on the login button
-    driver.find_element_by_id('LoginButton').click()
+    user.driver.find_element_by_id('LoginButton').click()
     
     # Wait until we have moved on from the login page
     try:
-        page_loaded = WebDriverWait( driver, 10 ).until_not(
-        lambda driver: driver.current_url == "http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=/go/"
+        page_loaded = WebDriverWait( user.driver, 10 ).until_not(
+        lambda driver: user.driver.current_url == "http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=/go/"
     )
     except TimeoutException:
         self.fail( "Loading timeout expired" )
         
-    if ( driver.current_url == 'http://10.165.250.201/go/'):
+    if ( user.driver.current_url == 'http://10.165.250.201/go/'):
         # If the Go! page has been loaded then login has been successful
-        print 'Successful Login'
+        print '%s successfullly logged in' % user.username
         result = 0
-    elif ( driver.current_url == 'http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=%2fgo%2f' ):
-        divText = driver.find_element_by_id('LoginDiv').text
+    elif ( user.driver.current_url == 'http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=%2fgo%2f' ):
+        divText = user.driver.find_element_by_id('LoginDiv').text
         if 'You are already logged in' in divText:
             print 'User already logged in'
             # Click on the OK button to get to the Go! page
-            driver.find_element_by_id('ButtonOK').click()
+            user.driver.find_element_by_id('ButtonOK').click()
             result = 1
         elif 'Please check your user name and password' in divText:
             print 'Username or password incorrect'
@@ -61,19 +67,17 @@ def login (username):
             print 'Maximum number of users exceded'
             result = 3
             
-    return (driver, result)
+    return result
 
-def logout (driver):
-    print 'Select options'
-    element = driver.find_element_by_class_name('icon-user')
-    hov = ActionChains(driver).move_to_element(element)
+def logout (user):
+    element = user.driver.find_element_by_class_name('icon-user')
+    hov = ActionChains(user.driver).move_to_element(element)
     hov.perform()
 
-    print 'Logging out'
-    form = driver.find_element_by_id('logout').click()
+    print 'Logging out: %s' % user.username
+    form = user.driver.find_element_by_id('logout').click()
     
-def closeBrowser(driver):
-    print 'Close browser'
-    driver.close()
-    #Login failed. Please check your user name and password, and try again.
+def closeBrowser(user):
+    print 'Closing browser'
+    user.driver.close()
     
