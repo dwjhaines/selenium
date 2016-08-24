@@ -10,11 +10,14 @@ if __name__ == "__main__":
     connection = db_utils.connectToDb()    
     cur = connection.cursor()
     
-    # Delete all existing licenses
+    '''# Delete all existing licenses
     db_utils.deleteAllLicenses(connection, cur)
     
     # Install license for five users
     db_utils.addFiveUserLicense(connection, cur)
+    '''
+    count = db_utils.getNumberOfActiveUsers(connection, cur)
+    print 'Number of active users: %d' % count
     
     # Close connection to database
     db_utils.closeConnection(connection, cur) 
