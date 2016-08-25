@@ -48,4 +48,13 @@ if __name__ == "__main__":
             user.loggedin = False
         time.sleep( 1 )
         um_utils.closeBrowser(user)
+        
+    valid_license_editors.py      
+    valid_license_admins.py
+    no_license_editors.py
+    no_license_admins.py
+    incorrect_ip_address_editors.py
+    incorrect_ip_address_admins.py
+        
+        
     '''

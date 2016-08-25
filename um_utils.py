@@ -8,19 +8,23 @@ from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 from selenium.webdriver.common.action_chains import ActionChains
 
+
 class user:
     def __init__(self, username, password):
         self.username = username
         self.password = password
         self.admin = False
+        self.manager = False
         self.loggedin = False
+
         # Create a new instance of the Chrome driver
         # Use incognito mode so that multiple users can be set up
         chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--incognito")
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
         # Maximise browser window
-        self.driver.maximize_window()
+        # self.driver.maximize_window()
         # Go to the Go! login page
         self.driver.get("http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=/go/")
         

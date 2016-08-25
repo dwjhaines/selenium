@@ -1,3 +1,11 @@
+###############################################################################################
+#                                                                                             # 
+# incorrect_ip_address_admins.py                                                              #
+#                                                                                             # 
+# Tests that up to five administrators can log in when the only license has an incorrect IP   #
+# address.                                                                                    #
+#                                                                                             #
+###############################################################################################
 import time
 import um_utils
 import db_utils
@@ -5,9 +13,8 @@ from selenium import webdriver
 import pyodbc
 
 if __name__ == "__main__":
-    
-    # List of editors i.e. users that do not have admin rights
-    editors = ['chloe.anderson', 'chloe.garcia', 'chloe.jackson', 'chloe.johnson', 'chloe.jones', 'chloe.lee']
+    # List of administrators i.e. users with administrator rights
+    admins = ['avaa.johnsona', 'avaa.whitea', 'avac.whitec', 'avad.johnsond', 'avaf.whitef', 'avag.johnsong', 'avag.wilsong']
     # Empty list to be filled with user objects
     users = [] 
     testFailed = 0
@@ -18,17 +25,22 @@ if __name__ == "__main__":
     
     # Delete all existing licenses
     db_utils.deleteAllLicenses(connection, cur)
+    maxUsers = 0
+    maxAdmins = maxUsers + 5
     
-    # Install license for five users and set the value of maxUsers
-    maxUsers = db_utils.addFiveUserLicense(connection, cur)
+    # Install license with and incorrect IP address
+    maxUsers = db_utils.addUserLicenseIncorrectIPAddress (connection, cur)
+    print 'License installed with invalid IP address'
+    
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)
     
     print 'Max users allowed: %d' % maxUsers
+    print 'Max administrators allowed: %d' % maxAdmins
     print 'Number of users already logged in: %d' % count
     print 'Opening browsers........'
 
-    for editor in editors:
+    for editor in admins:
         # For each editor, create a user object and add object to users list
         users.append(um_utils.user(editor, 'quantel@'))
        
@@ -38,13 +50,14 @@ if __name__ == "__main__":
         if (result == 0 or result == 1):
             user.loggedin = True 
         count = db_utils.getNumberOfActiveUsers(connection, cur)
-        print '\tNumber of active users (max: %d): %d' % (maxUsers, count)
-        if (count > maxUsers):
+        print '\tNumber of active users (max: %d): %d' % (maxAdmins, count)
+        if (count > maxAdmins):
             testFailed = 1
             print 'Test Failed: Max number of users exceded.'
             
     print 'Sleeping for 10 secs.................'
     time.sleep( 10 )
+    
     
     # Log out any users that were logged in and close all the browsers
     for user in users:
@@ -53,6 +66,10 @@ if __name__ == "__main__":
             user.loggedin = False
         time.sleep( 1 )
         um_utils.closeBrowser(user)
+        
+    # Reinstall license for five users
+    maxUsers = db_utils.addFiveUserLicense(connection, cur)
+    print 'License installed for %d users' % maxUsers
     
     # Close connection to database
     db_utils.closeConnection(connection, cur) 
