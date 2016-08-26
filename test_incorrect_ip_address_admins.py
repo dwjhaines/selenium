@@ -1,6 +1,6 @@
 ###############################################################################################
 #                                                                                             # 
-# incorrect_ip_address_admins.py                                                              #
+# test_incorrect_ip_address_admins.py                                                         #
 #                                                                                             # 
 # Tests that up to five administrators can log in when the only license has an incorrect IP   #
 # address.                                                                                    #

@@ -1,9 +1,10 @@
 ###############################################################################################
 #                                                                                             # 
-# test_no_license_admins.py                                                                   #
+# test_license_not_yet_valid_editors.py                                                       #
 #                                                                                             # 
-# Tests that up to five administrators can log in when there are no licenses at all in the    #
-# database.                                                                                   #
+# Tests that no editors can log in when the start date of the license is in the future.       #
+#                                                                                             #
+# NB. Need to check in db_utils.py that license date is in the future!!!!!!                   #
 #                                                                                             #
 ###############################################################################################
 import time
@@ -13,8 +14,8 @@ from selenium import webdriver
 import pyodbc
 
 if __name__ == "__main__":
-    # List of administrators i.e. users with administrator rights
-    admins = ['avaa.johnsona', 'avaa.whitea', 'avac.whitec', 'avad.johnsond', 'avaf.whitef', 'avag.johnsong', 'avag.wilsong']
+    # List of editors i.e. users that do not have admin rights
+    editors = ['chloe.anderson', 'chloe.garcia', 'chloe.jackson', 'chloe.johnson', 'chloe.jones', 'chloe.lee']
     # Empty list to be filled with user objects
     users = [] 
     testFailed = 0
@@ -26,34 +27,33 @@ if __name__ == "__main__":
     # Delete all existing licenses
     db_utils.deleteAllLicenses(connection, cur)
     maxUsers = 0
-    maxAdmins = maxUsers + 5
+    
+    # Install license with start date in the future
+    maxUsers = db_utils.addUserLicenseNotStarted (connection, cur)
+    print 'License installed with start date in the future'
     
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)
     
     print 'Max users allowed: %d' % maxUsers
-    print 'Max administrators allowed: %d' % maxAdmins
     print 'Number of users already logged in: %d' % count
     print 'Opening browsers........'
 
-    for editor in admins:
+    for editor in editors:
         # For each editor, create a user object and add object to users list
         users.append(um_utils.user(editor, 'quantel@'))
        
-    # Keep trying to log in each of the editors. Once the max number of users have been logged in, no further logins should be allowed.
+    # Keep trying to log in each of the editors. If any editor can log in, the test has failed.
     for user in users:
         result = um_utils.login(user)
-        if (result == 0 or result == 1):
+        if (result == 0):
+            # User has managed to log in successfully
             user.loggedin = True 
-        count = db_utils.getNumberOfActiveUsers(connection, cur)
-        print '\tNumber of active users (max: %d): %d' % (maxAdmins, count)
-        if (count > maxAdmins):
             testFailed = 1
-            print 'Test Failed: Max number of users exceded.'
-            
+            print 'Test Failed: User successfully logged in.'
+
     print 'Sleeping for 10 secs.................'
     time.sleep( 10 )
-    
     
     # Log out any users that were logged in and close all the browsers
     for user in users:
@@ -63,7 +63,8 @@ if __name__ == "__main__":
         time.sleep( 1 )
         um_utils.closeBrowser(user)
         
-    # Reinstall license for five users
+    # Delete incorrect license and reinstall license for five users
+    db_utils.deleteAllLicenses(connection, cur)
     maxUsers = db_utils.addFiveUserLicense(connection, cur)
     print 'License installed for %d users' % maxUsers
     

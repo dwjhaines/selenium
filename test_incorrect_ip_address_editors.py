@@ -1,6 +1,6 @@
 ###############################################################################################
 #                                                                                             # 
-# incorrect_ip_address_editors.py                                                             #
+# test_incorrect_ip_address_editors.py                                                        #
 #                                                                                             # 
 # Tests that no editors can log in when the license has an incorrect ip address.              #
 #                                                                                             #

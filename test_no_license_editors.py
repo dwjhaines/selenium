@@ -1,6 +1,6 @@
 ###############################################################################################
 #                                                                                             # 
-# no_license_editors.py                                                                       #
+# test_no_license_editors.py                                                                       #
 #                                                                                             # 
 # Tests that no editors can log in when there are no licenses at all in the database.         #
 #                                                                                             #

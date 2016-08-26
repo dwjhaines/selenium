@@ -1,9 +1,11 @@
 ###############################################################################################
 #                                                                                             # 
-# test_no_license_admins.py                                                                   #
+# test_license_not_yet_valid_admins.py                                                        #
 #                                                                                             # 
-# Tests that up to five administrators can log in when there are no licenses at all in the    #
-# database.                                                                                   #
+# Tests that up to five administrators can log in when the start date of teh license is in    #
+# the future.                                                                                 #
+#                                                                                             #
+# NB. Need to check in db_utils.py that license date is in the future!!!!!!                   #
 #                                                                                             #
 ###############################################################################################
 import time
@@ -27,6 +29,10 @@ if __name__ == "__main__":
     db_utils.deleteAllLicenses(connection, cur)
     maxUsers = 0
     maxAdmins = maxUsers + 5
+    
+    # Install license with start date in the future
+    maxUsers = db_utils.addUserLicenseNotStarted (connection, cur)
+    print 'License installed with start date in the future'
     
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)

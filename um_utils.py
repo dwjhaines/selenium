@@ -23,8 +23,7 @@ class user:
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--incognito")
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
-        # Maximise browser window
-        # self.driver.maximize_window()
+
         # Go to the Go! login page
         self.driver.get("http://10.165.250.201/quantel/um/login.aspx?ReturnUrl=/go/")
         

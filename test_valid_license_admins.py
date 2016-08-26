@@ -1,6 +1,6 @@
 ###############################################################################################
 #                                                                                             # 
-# valid_license_admins.py                                                                     #
+# test_valid_license_admins.py                                                                #
 #                                                                                             # 
 # Adds a license for five users and tests that ten administrators can log in.                 #
 #                                                                                             #
@@ -28,14 +28,7 @@ if __name__ == "__main__":
     
     # Install license for five users and set the value of maxAdmins
     maxUsers = db_utils.addFiveUserLicense(connection, cur)
-    print 'License installed for %d users' % maxUsers
-    # Check that the database indicates the correct max number of users
-    MaxConcurrentUsers = db_utils.getMaxConcurrentUsers(connection, cur)
-    if (MaxConcurrentUsers != maxUsers):
-        testFailed = 1
-        print 'Test Failed: MaxConcurrentUsers not set correctly in database.'
-    else:
-        print 'MaxConcurrent users set correctly in datavbase'        
+    print 'License installed for %d users' % maxUsers       
     maxAdmins = maxUsers + 5
     print 'Maximum number of administrators = %d' % maxAdmins
     count = db_utils.getNumberOfActiveUsers(connection, cur)
@@ -72,7 +65,7 @@ if __name__ == "__main__":
         um_utils.closeBrowser(user)
     
     # Close connection to database
-    db_utils.closeConnection(connection, cur) 
+    db_utils.closeConnection(connection, cur)
     
     # Print test result
     if (testFailed == 1):

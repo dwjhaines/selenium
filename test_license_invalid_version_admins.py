@@ -1,9 +1,8 @@
 ###############################################################################################
 #                                                                                             # 
-# test_no_license_admins.py                                                                   #
+# test_license_expired_admins.py                                                              #
 #                                                                                             # 
-# Tests that up to five administrators can log in when there are no licenses at all in the    #
-# database.                                                                                   #
+# Tests that up to five administrators can log in when the license has expired.               #
 #                                                                                             #
 ###############################################################################################
 import time
@@ -27,6 +26,10 @@ if __name__ == "__main__":
     db_utils.deleteAllLicenses(connection, cur)
     maxUsers = 0
     maxAdmins = maxUsers + 5
+    
+    # Install license with end date in the past
+    maxUsers = db_utils.addUserLicenseExpired (connection, cur)
+    print 'License installed with expired end date'
     
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)

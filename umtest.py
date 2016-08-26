@@ -49,12 +49,20 @@ if __name__ == "__main__":
         time.sleep( 1 )
         um_utils.closeBrowser(user)
         
-    valid_license_editors.py      
-    valid_license_admins.py
-    no_license_editors.py
-    no_license_admins.py
-    incorrect_ip_address_editors.py
-    incorrect_ip_address_admins.py
+    test_valid_license_editors.py      
+    test_valid_license_admins.py
+    test_no_license_editors.py
+    test_no_license_admins.py
+    test_incorrect_ip_address_editors.py
+    test_incorrect_ip_address_admins.py
+    test_editor_remove_license.py
+    test_admin_remove_license.py
+    test_license_not_yet_valid_editors.py
+    test_license_not_yet_valid_admins.py
+    test_license_expired_admins.py
+    test_license_expired_editors.py
+    test_license_invalid_version_editors.py
+    test_license_invalid_version_admins.py
         
         
     '''

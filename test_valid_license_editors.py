@@ -1,6 +1,6 @@
 ###############################################################################################
 #                                                                                             # 
-# valid_license_editors.py                                                                    #
+# test_valid_license_editors.py                                                               #
 #                                                                                             # 
 # Adds a license for five users and tests that no more than five users can log in.            #
 #                                                                                             #
