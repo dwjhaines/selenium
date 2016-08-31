@@ -2,7 +2,7 @@ import pyodbc
 
 def connectToDb():
     # Returns a connection to the sql databse specified in the connection string below
-    connection = pyodbc.connect(r'Driver={SQL Server}; Server=10.165.250.251\MSSQL1; Database=session_db; uid=sa; pwd=0sql0')
+    connection = pyodbc.connect(r'Driver={SQL Server}; Server=LAPTOP3\SQLEXPRESS; Database=session_db')
     return connection
   
 def closeConnection(connection, cur):
