@@ -30,13 +30,7 @@ if __name__ == "__main__":
     # Install license for five users and set the value of maxUsers
     maxUsers = db_utils.addFiveUserLicense(connection, cur)
     print 'License installed for %d users' % maxUsers
-    # Check that the database indicates the correct max number of users
-    MaxConcurrentUsers = db_utils.getMaxConcurrentUsers(connection, cur)
-    if (MaxConcurrentUsers != maxUsers):
-        testFailed = 1
-        print 'Test Failed: MaxConcurrentUsers not set correctly in database.'
-    else:
-        print 'MaxConcurrent users set correctly in datavbase'
+
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)
     
