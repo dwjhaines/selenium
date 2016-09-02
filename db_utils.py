@@ -121,6 +121,15 @@ def isUserLoggedIn (connection, cur, user):
     else:
         return False
 
+def deleteLicencesTable (connection, cur): 
+    # Delete the license table if it exists
+    sql_command= """
+    IF OBJECT_ID('[session_db].[dbo].[Licenses]', 'U') IS NOT NULL
+    DROP TABLE [session_db].[dbo].[Licenses];"""
+    cur.execute(sql_command)    
+    connection.commit()
 
-
-
+def createLicencesTable (connection, cur): 
+    sql_command= 'CREATE TABLE [session_db].[dbo].[Licenses](license NCHAR(1024) NULL)'
+    cur.execute(sql_command)    
+    connection.commit()
