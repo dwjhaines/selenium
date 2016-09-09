@@ -27,7 +27,7 @@ if __name__ == "__main__":
     maxUsers = 0
     
     # Install license with an invalid version number
-    maxUsers = db_utils.addUserLicenseInvlidVersion (connection, cur)
+    maxUsers = db_utils.addUserLicenseInvalidVersion (connection, cur)
     print 'License installed with invalid version number'
     
     # Get the number of users already logged in

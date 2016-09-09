@@ -1,9 +1,8 @@
 ###############################################################################################
 #                                                                                             # 
-# test_license_invalid_version_admins.py                                                      #
+# remove_license_table_admins.py                                                              #
 #                                                                                             # 
-# Tests that up to five administrators can log in when the license has an invalid version     #
-# number.                                                                                     #
+# Tests that no administrators can log in when the license table has been deleted.            #
 #                                                                                             #
 ###############################################################################################
 import time
@@ -28,9 +27,8 @@ if __name__ == "__main__":
     maxUsers = 0
     maxAdmins = maxUsers + 5
     
-    # Install license with an invalid version number
-    maxUsers = db_utils.addUserLicenseInvalidVersion (connection, cur)
-    print 'License installed with an invalid version'
+    # Delete the license table from the database
+    db_utils.deleteLicencesTable(connection, cur)
     
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)
@@ -40,11 +38,11 @@ if __name__ == "__main__":
     print 'Number of users already logged in: %d' % count
     print 'Opening browsers........'
 
-    for editor in admins:
-        # For each editor, create a user object and add object to users list
-        users.append(um_utils.user(editor, 'quantel@'))
+    for admin in admins:
+        # For each administrator, create a user object and add object to users list
+        users.append(um_utils.user(admin, 'quantel@'))
        
-    # Keep trying to log in each of the editors. Once the max number of users have been logged in, no further logins should be allowed.
+    # Keep trying to log in each of the users. Once the max number of users have been logged in, no further logins should be allowed.
     for user in users:
         result = um_utils.login(user)
         if (result == 0 or result == 1):
@@ -66,7 +64,9 @@ if __name__ == "__main__":
         time.sleep( 1 )
         um_utils.closeBrowser(user)
         
-    # Reinstall license for five users
+    # Re-create the license table and install a five user license
+    db_utils.createLicencesTable(connection, cur)
+    print 'License table re-created'
     maxUsers = db_utils.addFiveUserLicense(connection, cur)
     print 'License installed for %d users' % maxUsers
     

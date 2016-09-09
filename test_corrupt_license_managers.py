@@ -1,9 +1,8 @@
 ###############################################################################################
 #                                                                                             # 
-# test_license_invalid_version_admins.py                                                      #
+# test_corrupt_license_managers.py                                                            #
 #                                                                                             # 
-# Tests that up to five administrators can log in when the license has an invalid version     #
-# number.                                                                                     #
+# Tests that up to five managers can log in when the license has been corrupted.        #
 #                                                                                             #
 ###############################################################################################
 import time
@@ -13,8 +12,8 @@ from selenium import webdriver
 import pyodbc
 
 if __name__ == "__main__":
-    # List of administrators i.e. users with administrator rights
-    admins = ['avaa.johnsona', 'avaa.whitea', 'avac.whitec', 'avad.johnsond', 'avaf.whitef', 'avag.johnsong', 'avag.wilsong']
+    # List of managers i.e. users with manager rights
+    managers = ['maria.a', 'maria.b', 'maria.c', 'maria.d', 'maria.e', 'maria.f', 'maria.g']
     # Empty list to be filled with user objects
     users = [] 
     testFailed = 0
@@ -26,38 +25,39 @@ if __name__ == "__main__":
     # Delete all existing licenses
     db_utils.deleteAllLicenses(connection, cur)
     maxUsers = 0
-    maxAdmins = maxUsers + 5
+    maxManagers = maxUsers + 5
     
-    # Install license with an invalid version number
-    maxUsers = db_utils.addUserLicenseInvalidVersion (connection, cur)
-    print 'License installed with an invalid version'
+    # Install license which has had random characters changed
+    maxUsers = db_utils.addUserLicenseCorrupted (connection, cur)
+    print 'License installed with random characters changed'
     
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)
     
     print 'Max users allowed: %d' % maxUsers
-    print 'Max administrators allowed: %d' % maxAdmins
+    print 'Max managers allowed: %d' % maxManagers
     print 'Number of users already logged in: %d' % count
     print 'Opening browsers........'
 
-    for editor in admins:
-        # For each editor, create a user object and add object to users list
-        users.append(um_utils.user(editor, 'quantel@'))
+    for manager in managers:
+        # For each manager, create a user object and add object to users list
+        users.append(um_utils.user(manager, 'quantel@'))
        
-    # Keep trying to log in each of the editors. Once the max number of users have been logged in, no further logins should be allowed.
+    # Keep trying to log in each of the managers. Once the max number of users have been logged in, no further logins should be allowed.
     for user in users:
         result = um_utils.login(user)
         if (result == 0 or result == 1):
             user.loggedin = True 
         count = db_utils.getNumberOfActiveUsers(connection, cur)
-        print '\tNumber of active users (max: %d): %d' % (maxAdmins, count)
-        if (count > maxAdmins):
+        print '\tNumber of active users (max: %d): %d' % (maxManagers, count)
+        if (count > maxManagers):
             testFailed = 1
             print 'Test Failed: Max number of users exceded.'
             
     print 'Sleeping for 10 secs.................'
     time.sleep( 10 )
-      
+    
+    
     # Log out any users that were logged in and close all the browsers
     for user in users:
         if (user.loggedin == True):

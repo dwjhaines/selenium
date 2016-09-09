@@ -1,8 +1,9 @@
 ###############################################################################################
 #                                                                                             # 
-# remove_license_table_editors.py                                                            #
+# test_incorrect_ip_address_managers.py                                                       #
 #                                                                                             # 
-# Tests that no editors can log in when the license table has been deleted.                   #
+# Tests that up to five managers can log in when the only license has an incorrect IP         #
+# address.                                                                                    #
 #                                                                                             #
 ###############################################################################################
 import time
@@ -12,8 +13,8 @@ from selenium import webdriver
 import pyodbc
 
 if __name__ == "__main__":
-    # List of editors i.e. users that do not have admin rights
-    editors = ['chloe.anderson', 'chloe.garcia', 'chloe.jackson', 'chloe.johnson', 'chloe.jones', 'chloe.lee']
+    # List of managers i.e. users with manager rights
+    managers = ['maria.a', 'maria.b', 'maria.c', 'maria.d', 'maria.e', 'maria.f', 'maria.g']
     # Empty list to be filled with user objects
     users = [] 
     testFailed = 0
@@ -25,32 +26,38 @@ if __name__ == "__main__":
     # Delete all existing licenses
     db_utils.deleteAllLicenses(connection, cur)
     maxUsers = 0
+    maxManagers = maxUsers + 5
     
-    # Delete the license table from the database
-    db_utils.deleteLicencesTable(connection, cur)
+    # Install license with and incorrect IP address
+    maxUsers = db_utils.addUserLicenseIncorrectIPAddress (connection, cur)
+    print 'License installed with invalid IP address'
     
     # Get the number of users already logged in
     count = db_utils.getNumberOfActiveUsers(connection, cur)
     
     print 'Max users allowed: %d' % maxUsers
+    print 'Max managers allowed: %d' % maxManagers
     print 'Number of users already logged in: %d' % count
     print 'Opening browsers........'
 
-    for editor in editors:
-        # For each editor, create a user object and add object to users list
-        users.append(um_utils.user(editor, 'quantel@'))
+    for manager in managers:
+        # For each manager, create a user object and add object to users list
+        users.append(um_utils.user(manager, 'quantel@'))
        
-    # Keep trying to log in each of the editors. If any editor can log in, the test has failed.
+    # Keep trying to log in each of the editors. Once the max number of users have been logged in, no further logins should be allowed.
     for user in users:
         result = um_utils.login(user)
-        if (result == 0):
-            # User has managed to log in successfully
+        if (result == 0 or result == 1):
             user.loggedin = True 
+        count = db_utils.getNumberOfActiveUsers(connection, cur)
+        print '\tNumber of active users (max: %d): %d' % (maxManagers, count)
+        if (count > maxManagers):
             testFailed = 1
-            print 'Test Failed: User successfully logged in.'
-
+            print 'Test Failed: Max number of users exceded.'
+            
     print 'Sleeping for 10 secs.................'
     time.sleep( 10 )
+    
     
     # Log out any users that were logged in and close all the browsers
     for user in users:
@@ -60,8 +67,7 @@ if __name__ == "__main__":
         time.sleep( 1 )
         um_utils.closeBrowser(user)
         
-    # Re-create the license table and install a five user license
-    db_utils.createLicencesTable(connection, cur)
+    # Reinstall license for five users
     maxUsers = db_utils.addFiveUserLicense(connection, cur)
     print 'License installed for %d users' % maxUsers
     

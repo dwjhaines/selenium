@@ -23,9 +23,11 @@ if __name__ == "__main__":
     db_utils.closeConnection(connection, cur) 
     
     # List of editors i.e. users that do not have admin rights
-    editors = ['chloe.anderson', 'chloe.garcia']#, 'chloe.jackson', 'chloe.johnson', 'chloe.jones', 'chloe.lee', 'chloe.lewis', 'chloe.martin', 'chloe.martinez', 'chloe.miller', 'chloe.moore', 'chloe.robinson'] 
+    editors = ['chloe.anderson', 'chloe.garcia', 'chloe.jackson', 'chloe.johnson', 'chloe.jones', 'chloe.lee', 'chloe.lewis', 'chloe.martin', 'chloe.martinez', 'chloe.miller', 'chloe.moore', 'chloe.robinson'] 
     # List of administrators i.e. users with administrator rights
     admins = ['avaa.johnsona', 'avaa.whitea', 'avac.whitec', 'avad.johnsond', 'avaf.whitef', 'avag.johnsong', 'avag.wilsong', 'avai.robinsoni', 'aval.wilsonl', 'avag.whiteg', 'avah.wilsonh', 'avam.robinsonm']
+    # List of managers i.e. users with manager rights
+    managers = ['maria.a', 'maria.b', 'maria.c', 'maria.d', 'maria.e', 'maria.f', 'maria.g', 'maria.h', 'maria.i', 'maria.j', 'maria.k', 'maria.l']
     # Empty list to be filled with user objects
     users = [] 
     '''
@@ -51,18 +53,26 @@ if __name__ == "__main__":
         
     test_valid_license_editors.py      
     test_valid_license_admins.py
+    test_valid_license_managers.py
     test_no_license_editors.py
     test_no_license_admins.py
+    test_no_license_managers.py
     test_incorrect_ip_address_editors.py
     test_incorrect_ip_address_admins.py
+    test_incorrect_ip_address_managers.py
     test_editor_remove_license.py
     test_admin_remove_license.py
+    test_manager_remove_license.py
     test_license_not_yet_valid_editors.py
     test_license_not_yet_valid_admins.py
+    test_license_not_yet_valid_managers.py
     test_license_expired_admins.py
     test_license_expired_editors.py
+    test_license_expired_managers.py
     test_license_invalid_version_editors.py
     test_license_invalid_version_admins.py
+    test_corrupted_license_editors.py
+    test_corrupt_license_admins.py
         
         
     '''

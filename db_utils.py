@@ -67,7 +67,7 @@ def addUserLicenseExpired (connection, cur):
     # Return
     return 0    
     
-def addUserLicenseInvlidVersion (connection, cur):
+def addUserLicenseInvalidVersion (connection, cur):
     # Adds a license with the version number changed to be invalid. Version number set to 005
     sql_command= '''
     INSERT INTO [session_db].[dbo].[Licenses]
@@ -108,6 +108,7 @@ def getMaxConcurrentUsers (connection, cur):
     return count
     
 def isUserLoggedIn (connection, cur, user): 
+    print 'DEBUG: isUserLoggedIn'
     username = user.username
     sql_command= """
     SELECT COUNT(*)
@@ -117,8 +118,10 @@ def isUserLoggedIn (connection, cur, user):
     cur.execute(sql_command)
     count = int(str(cur.fetchall()[0][0]))
     if (count == 1):
+        print 'DEBUG: isUserLoggedIn: True'
         return True
     else:
+        print 'DEBUG: isUserLoggedIn: False'
         return False
 
 def deleteLicencesTable (connection, cur): 
