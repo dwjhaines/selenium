@@ -108,7 +108,6 @@ def getMaxConcurrentUsers (connection, cur):
     return count
     
 def isUserLoggedIn (connection, cur, user): 
-    print 'DEBUG: isUserLoggedIn'
     username = user.username
     sql_command= """
     SELECT COUNT(*)
@@ -118,10 +117,8 @@ def isUserLoggedIn (connection, cur, user):
     cur.execute(sql_command)
     count = int(str(cur.fetchall()[0][0]))
     if (count == 1):
-        print 'DEBUG: isUserLoggedIn: True'
         return True
     else:
-        print 'DEBUG: isUserLoggedIn: False'
         return False
 
 def deleteLicencesTable (connection, cur): 

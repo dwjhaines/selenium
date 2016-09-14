@@ -57,22 +57,26 @@ if __name__ == "__main__":
     test_no_license_editors.py
     test_no_license_admins.py
     test_no_license_managers.py
-    test_incorrect_ip_address_editors.py
-    test_incorrect_ip_address_admins.py
-    test_incorrect_ip_address_managers.py
+
     test_editor_remove_license.py
     test_admin_remove_license.py
     test_manager_remove_license.py
+    
+
     test_license_not_yet_valid_editors.py
     test_license_not_yet_valid_admins.py
-    test_license_not_yet_valid_managers.py
+    test_license_not_yet_valid_managers.py    
     test_license_expired_admins.py
     test_license_expired_editors.py
     test_license_expired_managers.py
+    test_incorrect_ip_address_editors.py
+    test_incorrect_ip_address_admins.py
+    test_incorrect_ip_address_managers.py
     test_license_invalid_version_editors.py
     test_license_invalid_version_admins.py
+    test_license_invalid_version_managers.py
     test_corrupted_license_editors.py
     test_corrupt_license_admins.py
-        
+    test_corrupted_license_manager.py
         
     '''

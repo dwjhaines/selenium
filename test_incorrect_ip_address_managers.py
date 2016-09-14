@@ -58,7 +58,6 @@ if __name__ == "__main__":
     print 'Sleeping for 10 secs.................'
     time.sleep( 10 )
     
-    
     # Log out any users that were logged in and close all the browsers
     for user in users:
         if (user.loggedin == True):
@@ -66,8 +65,9 @@ if __name__ == "__main__":
             user.loggedin = False
         time.sleep( 1 )
         um_utils.closeBrowser(user)
-        
-    # Reinstall license for five users
+    
+    # Delete incorrect license and reinstall license for five users
+    db_utils.deleteAllLicenses(connection, cur)
     maxUsers = db_utils.addFiveUserLicense(connection, cur)
     print 'License installed for %d users' % maxUsers
     
